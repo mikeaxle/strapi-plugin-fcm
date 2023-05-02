@@ -64,9 +64,17 @@ module.exports = {
     * */
     initialize: async (strapi) => {
         // console.log('initialize FCM');
-        const { serviceAccount } = await strapi.db.query('plugin::strapi-plugin-fcm.fcm-plugin-configuration').findOne({
+        const json = await strapi.db.query('plugin::strapi-plugin-fcm.fcm-plugin-configuration').findOne({
             select: ['serviceAccount']
         });
+
+        if (!json) {
+            console.log('Please add a service account configuration to the FCM plugin')
+            return
+        }
+
+        const { serviceAccount } = json
+
         // console.log('serviceAccount', serviceAccount);
         // console.log('admin.apps?.length', admin.apps?.length);
         if (serviceAccount) {
